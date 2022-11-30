@@ -15,11 +15,17 @@ type myFlags struct {
 
 func printSymLink(f string) {
 	link, err := os.Readlink(f)
-	if err == nil {
-		fmt.Println(f, "->", link)
-	} else {
+	if err != nil {
 		fmt.Println(f, "->", "[broken]")
+	} else {
+		_, err = os.Stat(link)
+		if err != nil {
+			fmt.Println(f, "->", "[broken]")
+		} else {
+			fmt.Println(f, "->", link)
+		}
 	}
+
 }
 
 func setIfNoFlags(myFlags *myFlags) {
@@ -31,12 +37,16 @@ func setIfNoFlags(myFlags *myFlags) {
 	}
 }
 
-func main() {
-	myFlags := new(myFlags)
+func setFlags(myFlags *myFlags) {
 	flag.BoolVar(&myFlags.slFlag, "sl", false, "show symbolic links")
 	flag.BoolVar(&myFlags.dFlag, "d", false, "show direcories")
 	flag.BoolVar(&myFlags.fFlag, "f", false, "show files")
 	flag.StringVar(&myFlags.ext, "ext", "", "show files with certain extension")
+}
+
+func main() {
+	myFlags := new(myFlags)
+	setFlags(myFlags)
 	flag.Parse()
 	setIfNoFlags(myFlags)
 	pathToDir := flag.Args()
