@@ -17,21 +17,12 @@ func main() {
 		splitted := strings.Fields(text)
 		stdinRead = append(stdinRead, splitted...)
 	}
-	arguments := stdinRead[1:]
-	command := exec.Command(stdinRead[0], arguments...)
-	stdout, err := command.StdoutPipe()
+	arguments := os.Args[2:]
+	arguments = append(arguments, stdinRead...)
+	command := exec.Command(os.Args[1], arguments...)
+	stdout2, err := command.Output()
 	if err != nil {
 		log.Fatal(err)
 	}
-	buf := bufio.NewReader(stdout)
-	newArgs := os.Args[2:]
-	command = exec.Command(os.Args[1], newArgs...)
-	oldstdiin := os.Stdin
-	command.Stdin = buf
-	stdoutstr, err := command.Output()
-	if err != nil {
-		log.Fatal(err)
-	}
-	os.Stdin = oldstdiin
-	fmt.Println(stdoutstr)
+	fmt.Print(string(stdout2))
 }
