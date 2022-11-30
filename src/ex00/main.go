@@ -61,6 +61,9 @@ func main() {
 		if err != nil {
 			err = nil
 		}
+		if path == pathToDir[0] {
+			return nil
+		}
 		var fi fs.FileInfo
 		fi, err = os.Lstat(path)
 		if err != nil {
