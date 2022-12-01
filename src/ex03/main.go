@@ -4,7 +4,6 @@ import (
 	"archive/tar"
 	"compress/gzip"
 	"flag"
-	"fmt"
 	"io"
 	"log"
 	"os"
@@ -80,9 +79,6 @@ func main() {
 	flag.StringVar(&aFlag, "a", "", "where to put archives")
 	flag.Parse()
 	files := flag.Args()
-	for _, str := range files {
-		fmt.Println(str)
-	}
 	var wg sync.WaitGroup
 	for _, file := range files {
 		wg.Add(1)
